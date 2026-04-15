@@ -1,4 +1,3 @@
 
-void myADC_setup(int channel);
-int myADC_getValue(int channel);
-int myADC_getMiliVolt(int channel);
+void myADC_setup(void);
+int myADC_value(void);
