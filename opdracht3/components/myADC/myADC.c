@@ -1,26 +1,42 @@
 #include <stdio.h>
 #include "myADC.h"
-#include "esp_adc/adc_oneshot.h"
+#include "myGPIO.h"
 
-adc_oneshot_unit_handle_t adc1_handle;
-adc_onehsot_unit_init_cfg_t init_config1 = {
-    .unit_id = ADC_UNIT_1,
-    .ulp_mode = ADC_ULP_MODE_DISABLE,
-};
-adc_oneshot_chan_cfg_t config = {
-    .bitwidth = ADC_BITWIDTH_DEFAULT,
-    .atten = ADC_ATTEN_DB_12,
-};
+#define RED 2
+#define GREEN 3
+#define BLUE 4
 
-void myADC_setup(void)
+void app_main(void)
 {
-    adc_oneshot_new_unit(&init_config1, &adc1_handle);
-    adc_oneshot_config_channel(adc1_handle, 0, &config);
-}
+    myADC_setup();
+    myGPIO_LED_Setup(RED);
+    myGPIO_LED_Setup(GREEN);
+    myGPIO_LED_Setup(BLUE);
 
-int myADC_getValue(void)
-{
-    int getal;
-    adc_oneshot_read(adc1_handle, 0, &getal);
-    return getal;
+int value;
+
+    while (1)
+    {
+        value = myADC_getValue();
+        printf("De waarde is: %d \n" , value );
+
+        if (value < 300)
+        {
+            myGPIO_LED_On(RED);
+            myGPIO_LED_Off(GREEN);
+            myGPIO_LED_Off(BLUE);
+        }
+        else if (value > 300 && value < 600)
+        {
+            myGPIO_LED_On(GREEN);
+            myGPIO_LED_Off(RED);
+            myGPIO_LED_Off(BLUE);
+        }
+        else
+        {
+            myGPIO_LED_On(BLUE);
+            myGPIO_LED_Off(RED);
+            myGPIO_LED_Off(GREEN);
+        }
+    }
 }
