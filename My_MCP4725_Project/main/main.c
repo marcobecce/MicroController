@@ -2,6 +2,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "mcp4725_lib.h"
+#include "driver/i2c_master.h"
 
 void app_main(void) {
     // Initialiseer I2C
@@ -9,6 +10,8 @@ void app_main(void) {
         printf("I2C Initialisatie mislukt!\n");
         return;
     }
+
+    
 
     uint16_t v = 0;
     while (1) {
